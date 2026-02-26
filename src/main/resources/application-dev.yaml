@@ -3,6 +3,21 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
     username: ${IAM_DB_USER:admin}
     password: ${IAM_DB_PASSWORD:password}
+  cloud:
+    function:
+      definition: userCreatedConsumer # Definimos el bean que actuará como consumidor de mensajes
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+      bindings:
+        # Canal de SALIDA (Productor) para publicar eventos de usuario creado
+        userCreatedProducer-out-0: # 'out' significa que es un canal de salida (Publisher)
+          destination: vankoo-user-topic # Nombre del topic en Kafka
+        # Canal de ENTRADA (Consumidor) para consumir eventos de usuario creado
+        userCreatedConsumer-in-0: # 'in' significa que es un canal de entrada
+          destination: vankoo-user-topic
+          group: iam-group # Esto crea un grupo de consumidores para balancear la carga
 
 server:
   port: 8081
