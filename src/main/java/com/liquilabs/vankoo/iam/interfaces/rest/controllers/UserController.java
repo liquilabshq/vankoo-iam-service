@@ -1,6 +1,7 @@
 package com.liquilabs.vankoo.iam.interfaces.rest.controllers;
 
 import com.liquilabs.vankoo.iam.application.internal.commandservices.UserCommandServiceImpl;
+import com.liquilabs.vankoo.iam.domain.model.valueobjects.Email;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.CreateUserResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody CreateUserResource resource) {
-        userCommandService.createUser(resource.email(), resource.name());
+        userCommandService.createUser(new Email(resource.email()), resource.name());
         return ResponseEntity.ok().build();
     }
 }

@@ -1,6 +1,7 @@
 package com.liquilabs.vankoo.iam.domain.model.valueobjects;
 
 import com.fasterxml.uuid.Generators;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.util.UUID;
  */
 @Embeddable
 public record UserId (
+        @Column(columnDefinition = "UUID", nullable = false, unique = true) // Esto le dice a Postgres que use su tipo nativo
         UUID id
 ) implements Serializable {
     public UserId {

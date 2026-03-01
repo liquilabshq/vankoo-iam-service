@@ -1,6 +1,7 @@
 package com.liquilabs.vankoo.iam.domain.model.aggregates;
 
 import com.liquilabs.vankoo.iam.domain.model.events.UserCreatedEvent;
+import com.liquilabs.vankoo.iam.domain.model.valueobjects.Email;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.UserId;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,6 +23,9 @@ import java.util.Date;
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(indexes = {
+        @Index(name = "idx_user_email", columnList = "email", unique = true) // Índice único para el campo email
+})
 public class User extends AbstractAggregateRoot<User> implements Persistable<UserId> {
 
     /**
@@ -32,7 +36,8 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
     @EmbeddedId
     private UserId id;
 
-    private String email;
+    @Embedded
+    private Email email;
 
     private String name;
 
@@ -46,7 +51,7 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
 
     protected User() {}
 
-    public User(String email, String name) {
+    public User(Email email, String name) {
         this.id = new UserId();
         this.email = email;
         this.name = name;
@@ -54,6 +59,15 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
 
     public void registerUserCreatedEvent() {
         this.registerEvent(new UserCreatedEvent(this, this));
+    }
+
+    /**
+     * Devuelve el ID de la entidad, que en este caso es un UserId.
+     * Esto es requerido por la interfaz Persistable para identificar la entidad.
+     */
+    @Override
+    public UserId getId() {
+        return id;
     }
 
     /**
