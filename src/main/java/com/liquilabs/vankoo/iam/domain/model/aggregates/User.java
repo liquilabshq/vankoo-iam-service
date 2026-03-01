@@ -19,9 +19,8 @@ import java.util.Date;
  * <p>
  * Básicamente, no necesita heredar de una clase `AuditableAbstractAggregateRoot` para evitar acoplamiento.
  */
-@Entity
-@Table(name = "users")
 @Getter
+@Entity
 @EntityListeners(AuditingEntityListener.class)
 public class User extends AbstractAggregateRoot<User> implements Persistable<UserId> {
 

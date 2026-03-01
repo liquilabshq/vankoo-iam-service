@@ -9,6 +9,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: com.liquilabs.vankoo.iam.infrastructure.persistence.jpa.configuration.strategy.SnakeCaseWithPluralizedTablePhysicalNamingStrategy
     open-in-view: true
     properties:
       hibernate:
