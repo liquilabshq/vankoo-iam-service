@@ -1,7 +1,9 @@
 package com.liquilabs.vankoo.iam.domain.model.aggregates;
 
+import com.liquilabs.vankoo.iam.domain.model.entities.Role;
 import com.liquilabs.vankoo.iam.domain.model.events.UserCreatedEvent;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.Email;
+import com.liquilabs.vankoo.iam.domain.model.valueobjects.Password;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.UserId;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Extiende de AbstractAggregateRoot para poder registrar eventos de dominio relacionados con esta entidad.
@@ -39,7 +43,14 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
     @Embedded
     private Email email;
 
-    private String name;
+    @Embedded
+    private Password password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -51,10 +62,22 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
 
     protected User() {}
 
-    public User(Email email, String name) {
+    public User(Email email, Password password, List<Role> roles) {
         this.id = new UserId();
         this.email = email;
-        this.name = name;
+        this.password = password;
+        addRoles(roles);
+    }
+
+    public User addRole(Role role) {
+        this.roles.add(role);
+        return this;
+    }
+
+    public User addRoles(List<Role> roles) {
+        var validatedRoleSet = Role.validateRoleSet(roles);
+        this.roles.addAll(validatedRoleSet);
+        return this;
     }
 
     public void registerUserCreatedEvent() {
