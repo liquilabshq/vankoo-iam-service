@@ -11,8 +11,8 @@
     <groupId>com.liquilabs.vankoo</groupId>
     <artifactId>iam</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>vankoo-iam-service</name>
-    <description>vankoo-iam-service</description>
+    <name>Vankoo IAM Service</name>
+    <description>API documentation for Vankoo IAM Service</description>
     <url/>
     <licenses>
         <license/>

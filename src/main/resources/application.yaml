@@ -17,6 +17,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
+documentation:
+  application:
+    title: @project.name@
+    description: @project.description@
+    version: @project.version@
+
 authorization:
   jwt:
     secret: ${JWT_SECRET}
