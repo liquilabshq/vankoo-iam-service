@@ -1,5 +1,6 @@
 package com.liquilabs.vankoo.iam.infrastructure.tokens.jwt.services;
 
+import com.liquilabs.vankoo.iam.infrastructure.authorization.sfs.model.UserDetailsImpl;
 import com.liquilabs.vankoo.iam.infrastructure.tokens.jwt.BearerTokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -10,12 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -35,19 +38,37 @@ public class TokenServiceImpl implements BearerTokenService {
 
     @Override
     public String generateToken(Authentication authentication) {
-        return buildTokenWithDefaultParameters(authentication.getName());
+        var roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+        var email = authentication.getPrincipal() instanceof UserDetailsImpl userDetails
+                ? userDetails.getEmail()
+                : null;
+        return buildTokenWithClaims(authentication.getName(), email, roles);
     }
 
     public String generateToken(String username) {
         return buildTokenWithDefaultParameters(username);
     }
 
+    @Override
+    public String generateToken(String userId, String email, List<String> roles) {
+        return buildTokenWithClaims(userId, email, roles);
+    }
+
     private String buildTokenWithDefaultParameters(String username) {
+        return buildTokenWithClaims(username, null, null);
+    }
+
+    private String buildTokenWithClaims(String username, String email, List<String> roles) {
         var issuedAt = new Date();
         var expiration = DateUtils.addDays(issuedAt, expirationDays);
         var key = getSigningKey();
-        return Jwts.builder()
-                .subject(username)
+        var builder = Jwts.builder();
+        builder.subject(username);
+        builder.claim("email", email);
+        builder.claim("roles", roles);
+        return builder
                 .issuedAt(issuedAt)
                 .expiration(expiration)
                 .signWith(key)

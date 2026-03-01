@@ -61,7 +61,9 @@ public class UserCommandServiceImpl implements UserCommandService {
             throw new IllegalArgumentException("User not found");
         if (!hashingService.matches(command.password().password(), user.get().getPassword().password()))
             throw new IllegalArgumentException("Invalid password");
-        var token = tokenService.generateToken(user.get().getEmail().email());
+        if (user.get().getId() == null) throw new IllegalStateException("User ID is null after save");
+        var roles = user.get().getRoles().stream().map(role -> role.getName().name()).toList();
+        var token = tokenService.generateToken(user.get().getId().id().toString(), user.get().getEmail().email(), roles);
         return Optional.of(ImmutablePair.of(user.get(), token));
     }
 }
