@@ -28,6 +28,8 @@
     </scm>
     <properties>
         <java.version>25</java.version>
+        <tomcat.version>11.0.18</tomcat.version>
+        <assertj.version>3.27.7</assertj.version>
         <spring-cloud.version>2025.1.0</spring-cloud.version>
     </properties>
     <dependencyManagement>
@@ -80,6 +82,12 @@
             <artifactId>pluralize</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!-- Fixes CVE-2025-66566 vulnerability in lz4-java -->
+        <dependency>
+            <groupId>at.yawk.lz4</groupId>
+            <artifactId>lz4-java</artifactId>
+            <version>1.10.1</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -103,6 +111,13 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-stream-binder-kafka</artifactId>
+            <!-- Exclude lz4-java to avoid CVE-2025-66566 vulnerability -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.lz4</groupId>
+                    <artifactId>lz4-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
