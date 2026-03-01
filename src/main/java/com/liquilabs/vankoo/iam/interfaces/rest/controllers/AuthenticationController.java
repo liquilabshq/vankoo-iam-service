@@ -33,7 +33,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    @Operation(summary = "Sign up a new user", description = "Create a new user account with the provided information")
+    @Operation(summary = "Sign-up", description = "Create a new user account with the provided information")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
@@ -48,7 +48,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
-    @Operation(summary = "Sign in a user", description = "Authenticate a user with the provided credentials")
+    @Operation(summary = "Sign-in", description = "Authenticate a user with the provided credentials")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
