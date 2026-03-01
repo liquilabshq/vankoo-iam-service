@@ -9,6 +9,9 @@ import com.liquilabs.vankoo.iam.interfaces.rest.transform.AuthenticatedUserResou
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.SignInCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.SignUpCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +33,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
+    @Operation(summary = "Sign up a new user", description = "Create a new user account with the provided information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+    })
     public ResponseEntity<UserResource> signUp(@RequestBody SignUpResource resource) {
         var signUpCommand = SignUpCommandFromResourceAssembler.toCommandFromResource(resource);
         var user = userCommandService.handle(signUpCommand);
@@ -40,6 +48,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
+    @Operation(summary = "Sign in a user", description = "Authenticate a user with the provided credentials")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+    })
     public ResponseEntity<AuthenticatedUserResource> signIn(@RequestBody SignInResource resource) {
         var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(resource);
         var authenticatedUser = userCommandService.handle(signInCommand);
