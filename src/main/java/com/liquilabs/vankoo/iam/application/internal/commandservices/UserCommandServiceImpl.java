@@ -1,7 +1,10 @@
 package com.liquilabs.vankoo.iam.application.internal.commandservices;
 
+import com.liquilabs.vankoo.iam.application.internal.outboundservices.hashing.HashingService;
+import com.liquilabs.vankoo.iam.application.internal.outboundservices.tokens.TokenService;
 import com.liquilabs.vankoo.iam.domain.model.aggregates.User;
 import com.liquilabs.vankoo.iam.domain.model.commands.SignUpCommand;
+import com.liquilabs.vankoo.iam.domain.model.valueobjects.Password;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleName;
 import com.liquilabs.vankoo.iam.domain.services.UserCommandService;
 import com.liquilabs.vankoo.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
@@ -17,13 +20,19 @@ public class UserCommandServiceImpl implements UserCommandService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final HashingService hashingService;
+    private final TokenService tokenService;
 
     public UserCommandServiceImpl(
             UserRepository userRepository,
-            RoleRepository roleRepository
+            RoleRepository roleRepository,
+            HashingService hashingService,
+            TokenService tokenService
     ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.hashingService = hashingService;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -36,7 +45,7 @@ public class UserCommandServiceImpl implements UserCommandService {
                 : command.roles().stream()
                 .map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found")))
                 .toList();
-        var user = new User(command.email(), command.password(), roles);
+        var user = new User(command.email(), new Password(hashingService.encode(command.password().password())), roles);
         user.registerUserCreatedEvent();
         userRepository.save(user);
         return Optional.of(user);
