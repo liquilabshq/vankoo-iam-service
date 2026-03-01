@@ -1,8 +1,12 @@
 package com.liquilabs.vankoo.iam.interfaces.rest.controllers;
 
 import com.liquilabs.vankoo.iam.domain.services.UserCommandService;
+import com.liquilabs.vankoo.iam.interfaces.rest.resources.AuthenticatedUserResource;
+import com.liquilabs.vankoo.iam.interfaces.rest.resources.SignInResource;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.SignUpResource;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.UserResource;
+import com.liquilabs.vankoo.iam.interfaces.rest.transform.AuthenticatedUserResourceFromEntityAssembler;
+import com.liquilabs.vankoo.iam.interfaces.rest.transform.SignInCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.SignUpCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,5 +37,15 @@ public class AuthenticationController {
         var userEntity = user.get();
         var userResource = UserResourceFromEntityAssembler.toResourceFromEntity(userEntity);
         return new ResponseEntity<>(userResource, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/sign-in")
+    public ResponseEntity<AuthenticatedUserResource> signIn(@RequestBody SignInResource resource) {
+        var signInCommand = SignInCommandFromResourceAssembler.toCommandFromResource(resource);
+        var authenticatedUser = userCommandService.handle(signInCommand);
+        if (authenticatedUser.isEmpty())
+            return ResponseEntity.notFound().build();
+        var authenticatedUserResource = AuthenticatedUserResourceFromEntityAssembler.toResourceFromEntity(authenticatedUser.get().getLeft(), authenticatedUser.get().getRight());
+        return ResponseEntity.ok(authenticatedUserResource);
     }
 }
