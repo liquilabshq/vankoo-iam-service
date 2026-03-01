@@ -1,7 +1,7 @@
 package com.liquilabs.vankoo.iam.interfaces.rest.resources;
 
-public record CreateUserResource(
-        String email,
+public record RoleResource(
+        String id,
         String name
 ) {
 }
