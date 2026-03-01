@@ -10,14 +10,12 @@ spring:
       kafka:
         binder:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+          auto-create-topics: true
       bindings:
-        # Canal de SALIDA (Productor) para publicar eventos de usuario creado
-        userCreatedProducer-out-0: # 'out' significa que es un canal de salida (Publisher)
-          destination: vankoo-user-topic # Nombre del topic en Kafka
-        # Canal de ENTRADA (Consumidor) para consumir eventos de usuario creado
-        userCreatedConsumer-in-0: # 'in' significa que es un canal de entrada
-          destination: vankoo-user-topic
-          group: iam-group # Esto crea un grupo de consumidores para balancear la carga
+        # Este nombre debe coincidir con el del streamBridge.send()
+        userCreated-out-0:
+          destination: vankoo.iam.user.created
+          content-type: application/json
 
 server:
   port: 8081
