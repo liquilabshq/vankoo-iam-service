@@ -29,6 +29,7 @@ public class Role implements Persistable<RoleId> {
     private boolean isNew = true;
 
     public Role(RoleName name) {
+        this.id = new RoleId(); // Genera un nuevo ID automáticamente
         this.name = name;
     }
 

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,10 +63,15 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
 
     protected User() {}
 
-    public User(Email email, Password password, List<Role> roles) {
+    public User(Email email, Password password) {
         this.id = new UserId();
         this.email = email;
         this.password = password;
+        this.roles = new HashSet<>();
+    }
+
+    public User(Email email, Password password, List<Role> roles) {
+        this(email, password);
         addRoles(roles);
     }
 
