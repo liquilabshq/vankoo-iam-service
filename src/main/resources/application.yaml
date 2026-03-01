@@ -31,3 +31,4 @@ authorization:
 
 scalar:
   enabled: true
+  theme: kepler
