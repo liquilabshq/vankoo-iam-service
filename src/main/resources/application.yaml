@@ -19,3 +19,11 @@ spring:
 
 scalar:
   enabled: true
+  path: /docs/scalar
+
+springdoc:
+  show-login-endpoint: true
+  writer-with-default-pretty-printer: true
+  api-docs:
+    resolve-schema-properties: true
+  show-actuator: true
