@@ -1,6 +1,9 @@
+server:
+  port: 8081
+
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
+    url: jdbc:postgresql://${IAM_DB_HOST:localhost}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
     username: ${IAM_DB_USER:admin}
     password: ${IAM_DB_PASSWORD:password}
   cloud:
@@ -9,7 +12,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+          brokers: ${KAFKA_BROKER_HOST:localhost}:${KAFKA_BROKER_PORT:9092}
           auto-create-topics: true
       bindings:
         # Este nombre debe coincidir con el del streamBridge.send()
@@ -17,5 +20,17 @@ spring:
           destination: vankoo.iam.user.created
           content-type: application/json
 
-server:
-  port: 8081
+eureka:
+  instance:
+    prefer-ip-address: false # En desarrollo, no es necesario usar IP, el hostname funciona bien
+  client:
+    register-with-eureka: true # Buscamos registrarnos en Eureka
+    fetch-registry: true # Queremos obtener la lista de servicios registrados para poder comunicarnos con ellos
+    service-url:
+      defaultZone: ${DISCOVERY_SERVER_URL:http://localhost:8761/eureka/} # En desarrollo, apuntamos a localhost para Eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        # En desarrollo, exponemos solo los endpoints de salud e info por temas de seguridad, pero también para no saturar el log
+        include: "health,info" # Importante para que Eureka vea el estado del IAM

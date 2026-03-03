@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Vankoo IAM Service
+    name: iam-service # Este nombre usará Eureka para registrar el servicio, por lo que debe ser en minúsculas y sin espacios
   profiles:
     active: ${SPRING_PROFILES_ACTIVE}
   datasource:
