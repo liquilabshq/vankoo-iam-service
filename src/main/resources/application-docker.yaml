@@ -14,7 +14,7 @@ spring:
       kafka:
         binder:
           # Dentro de Docker, Kafka se ve a través del puerto 9094 (INTERNAL)
-          brokers: ${KAFKA_BROKER_HOST:kafka-broker}:${KAFKA_BROKER_PORT:9094}
+          brokers: ${KAFKA_HOST:kafka-broker}:${KAFKA_INTERNAL_PORT:9094}
       bindings:
         userCreated-out-0:
           destination: vankoo.iam.user.created

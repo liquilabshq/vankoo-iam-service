@@ -12,7 +12,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: ${KAFKA_BROKER_HOST:localhost}:${KAFKA_BROKER_PORT:9092}
+          brokers: ${KAFKA_HOST:localhost}:${KAFKA_EXTERNAL_PORT:9092}
           auto-create-topics: true
       bindings:
         # Este nombre debe coincidir con el del streamBridge.send()
