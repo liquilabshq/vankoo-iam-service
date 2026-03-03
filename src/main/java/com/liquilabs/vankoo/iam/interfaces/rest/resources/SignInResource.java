@@ -1,7 +1,7 @@
 package com.liquilabs.vankoo.iam.interfaces.rest.resources;
 
-public record CreateUserResource(
+public record SignInResource(
         String email,
-        String name
+        String password
 ) {
 }

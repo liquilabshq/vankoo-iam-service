@@ -9,11 +9,26 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: com.liquilabs.vankoo.iam.infrastructure.persistence.jpa.configuration.strategy.SnakeCaseWithPluralizedTablePhysicalNamingStrategy
     open-in-view: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
+documentation:
+  application:
+    title: @project.name@
+    description: @project.description@
+    version: @project.version@
+
+authorization:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration:
+      days: ${JWT_EXPIRATION_DAYS}
+
 scalar:
   enabled: true
+  theme: kepler
