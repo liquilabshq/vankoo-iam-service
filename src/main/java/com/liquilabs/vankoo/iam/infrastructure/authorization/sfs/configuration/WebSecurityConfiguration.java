@@ -76,7 +76,9 @@ public class WebSecurityConfiguration {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/scalar",
-                                "/scalar/**"
+                                "/scalar/**",
+                                "/actuator",
+                                "/actuator/**"
                                 ).permitAll()
                         .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
