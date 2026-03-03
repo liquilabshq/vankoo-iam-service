@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://${IAM_DB_HOST:localhost}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
-    username: ${IAM_DB_USER:admin}
+    username: ${IAM_DB_USERNAME:admin}
     password: ${IAM_DB_PASSWORD:password}
   cloud:
     function:
