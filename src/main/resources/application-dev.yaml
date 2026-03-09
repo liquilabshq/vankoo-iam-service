@@ -7,18 +7,27 @@ spring:
     username: ${IAM_DB_USERNAME:admin}
     password: ${IAM_DB_PASSWORD:password}
   cloud:
-    function:
-      definition: userCreatedConsumer # Definimos el bean que actuará como consumidor de mensajes
+    #function:
+    #  definition: userCreatedConsumer # Definimos el bean que actuará como consumidor de mensajes
     stream:
       kafka:
         binder:
           brokers: ${KAFKA_HOST:localhost}:${KAFKA_EXTERNAL_PORT:9092}
           auto-create-topics: true
+          producer-properties:
+            acks: all # Garantiza que el mensaje se ha replicado en todos los brokers antes de considerarlo enviado
+            retries: 3 # Número de reintentos en caso de fallo
+            enable.idempotence: true # Evita duplicados en caso de reintentos
       bindings:
+        # SALIDA: Nombre lógico para tu StreamBridge
         # Este nombre debe coincidir con el del streamBridge.send()
-        userCreated-out-0:
-          destination: vankoo.iam.user.created
+        iam-out-0:
+          destination: vankoo.iam.events
           content-type: application/json
+        # ENTRADA: Nombre basado en la función (Bean)
+        #billingEventsConsumer-in-0:
+        #  destination: vankoo.billing.events
+        #  group: iam-service-group
 
 eureka:
   instance:

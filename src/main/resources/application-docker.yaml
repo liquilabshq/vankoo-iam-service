@@ -8,17 +8,28 @@ spring:
     username: ${IAM_DB_USERNAME:admin}
     password: ${IAM_DB_PASSWORD:password}
   cloud:
-    function:
-      definition: userCreatedConsumer
+    #function:
+    #  definition: userCreatedConsumer # Definimos el bean que actuará como consumidor de mensajes
     stream:
       kafka:
         binder:
           # Dentro de Docker, Kafka se ve a través del puerto 9094 (INTERNAL)
           brokers: ${KAFKA_HOST:kafka-broker}:${KAFKA_INTERNAL_PORT:9094}
+          auto-create-topics: true
+          producer-properties:
+            acks: all
+            retries: 3
+            enable.idempotence: true
       bindings:
-        userCreated-out-0:
-          destination: vankoo.iam.user.created
+        # SALIDA: Nombre lógico para tu StreamBridge
+        # Este nombre debe coincidir con el del streamBridge.send()
+        iam-out-0:
+          destination: vankoo.iam.events
           content-type: application/json
+        # ENTRADA: Nombre basado en la función (Bean)
+        #billingEventsConsumer-in-0:
+        #  destination: vankoo.billing.events
+        #  group: iam-service-group
 
 eureka:
   instance:

@@ -87,7 +87,11 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
     }
 
     public void registerUserCreatedEvent() {
-        this.registerEvent(new UserCreatedEvent(this, this));
+        this.registerEvent(
+                new UserCreatedEvent(
+                        this.id.id().toString(),
+                        this.getEmail().email(),
+                        this.getRoles().stream().map(role -> role.getName().name()).toList()));
     }
 
     /**
