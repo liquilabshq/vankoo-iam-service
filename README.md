@@ -76,3 +76,7 @@ Si necesitas personalizar la conexión, estas son las variables que maneja el `a
 1. **Error de Kafka (Rebootstrapping):** Asegúrate de que el contenedor de Kafka esté corriendo. Si estás en Local, verifica que el puerto `9092` esté mapeado.
 2. **Status Unhealthy en Docker:** El servicio tarda unos 40 segundos en pasar a `healthy` debido a las validaciones de conexión con la DB y Kafka.
 3. **Error 401 en Actuator:** Si agregaste nuevas reglas de seguridad, asegúrate de que `/actuator/**` siga teniendo `permitAll()`.
+
+## Información Adicional
+
+Puedes encontrar más detalles sobre el proyecto en el directorio de [Documentación](/docs), donde se agregaron guías en markdown y demás documentación relevante para el desarrollo y mantenimiento del servicio.

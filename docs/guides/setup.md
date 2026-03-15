@@ -29,6 +29,8 @@ Se usó la última versión de Spring Boot (4.0.2) y se seleccionaron las siguie
 - **Lombok:** Para reducir el código boilerplate, como getters, setters, constructores, etc.
 - **Validation:** Para validar las entradas de los usuarios en los endpoints REST.
 
+![Setup-2](../images/setup-2.png)
+
 Posteriormente, se añadieron otras dependencias clave para la funcionalidad específica del servicio, algunas son:
 
 - **Springdoc OpenAPI Scalar:** Para generar documentación de la API REST de manera automática y la integración de Scalar con OpenAPI.
@@ -36,6 +38,7 @@ Posteriormente, se añadieron otras dependencias clave para la funcionalidad esp
 - **Spring Boot Actuator:** Para exponer endpoints de monitoreo y salud del servicio.
 - **Spring Cloud Netflix Eureka Client:** Para permitir que el servicio se registre en el Discovery Server de Eureka, facilitando la comunicación entre microservicios.
 - **Spring Security:** Para implementar la autenticación y autorización, especialmente con JWT.
-- **jjwt:** Para manejar la creación y validación de tokens JWT.
-
-![Setup-2](../images/setup-2.png)
+- **jjwt:** Para manejar la creación y validación de tokens JWT (`jjwt-api`, `jjwt-impl`, `jjwt-jackson`).
+- **Java UUID Generator:** Para la generación de UUIDs v7.
+- **Pluralize:** Para soportar utilidades de pluralización de texto dentro del proyecto (usado para las tablas de la base de datos).
+- **LZ4 Java (Override de seguridad):** Para reemplazar la versión vulnerable transitiva y corregir la CVE-2025-66566.
