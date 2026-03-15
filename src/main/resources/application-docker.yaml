@@ -42,6 +42,10 @@ eureka:
     service-url:
       defaultZone: ${DISCOVERY_SERVER_URL:http://discovery-server:8761/eureka/}
 
+documentation:
+  local-url: http://${IAM_SERVICE_SERVER_URL:localhost}:${IAM_SERVICE_PORT:8081} # En Docker, el servicio se verá a través del puerto 8081
+  gateway-url: http://${IAM_SERVICE_GATEWAY_URL:localhost}:${API_GATEWAY_PORT:8080}/iam # En Docker, el API Gateway se verá a través del puerto 8080
+
 management:
   endpoints:
     web:

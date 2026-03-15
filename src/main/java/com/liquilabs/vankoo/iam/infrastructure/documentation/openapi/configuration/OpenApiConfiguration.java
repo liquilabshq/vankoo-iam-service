@@ -5,9 +5,12 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class OpenApiConfiguration {
@@ -20,6 +23,12 @@ public class OpenApiConfiguration {
 
     @Value("${documentation.application.version}")
     private String applicationVersion;
+
+    @Value("${documentation.local-url}")
+    private String localUrl;
+
+    @Value("${documentation.gateway-url}")
+    private String gatewayUrl;
 
     @Bean
     public OpenAPI iamServiceOpenApi() {
@@ -44,6 +53,10 @@ public class OpenApiConfiguration {
         return new OpenAPI()
                 .openapi("3.1.0")
                 .info(info)
+                .servers(List.of(
+                        new Server().url(localUrl).description("Local Server (Direct access)"),
+                        new Server().url(gatewayUrl).description("API Gateway (Production/Docker)")
+                ))
                 .addSecurityItem(securityRequirement)
                 .components(new Components()
                         .addSecuritySchemes("Bearer Authentication", jwtSecurityScheme));

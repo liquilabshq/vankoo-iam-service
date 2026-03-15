@@ -37,6 +37,11 @@ eureka:
     fetch-registry: true # Queremos obtener la lista de servicios registrados para poder comunicarnos con ellos
     service-url:
       defaultZone: ${DISCOVERY_SERVER_URL:http://localhost:8761/eureka/} # En desarrollo, apuntamos a localhost para Eureka
+
+documentation:
+  local-url: http://localhost:${IAM_SERVICE_PORT:8081} # En desarrollo, el servicio se verá a través de localhost
+  gateway-url: http://localhost:${API_GATEWAY_PORT:8080}/iam # En desarrollo, el API Gateway se verá a través de localhost
+
 management:
   endpoints:
     web:
