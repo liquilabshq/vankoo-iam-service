@@ -57,6 +57,7 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // En producción, se recomienda quitar CORS y dejar que el gateway se encargue de eso, pero para facilitar las pruebas y el desarrollo, lo dejamos abierto
         http.cors(configurer -> configurer.configurationSource(_ -> {
             var cors = new CorsConfiguration();
             cors.setAllowedOrigins(List.of("*"));
