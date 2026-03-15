@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var userId = new UserId(UUID.fromString(username));
-        var user = userRepository.findById(userId)
+        var user = userRepository.findByIdWithRoles(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + username));
         return UserDetailsImpl.build(user);
     }

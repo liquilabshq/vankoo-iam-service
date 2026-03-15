@@ -28,6 +28,6 @@ public record UserId (
      * Esto es especialmente útil para sistemas distribuidos donde se generan IDs en diferentes nodos, evitando colisiones y mejorando el rendimiento en la base de datos.
      */
     public UserId() {
-        this((Generators.timeBasedEpochGenerator().generate()));
+        this(Generators.timeBasedEpochGenerator().generate());
     }
 }

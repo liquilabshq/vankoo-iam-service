@@ -2,6 +2,9 @@ server:
   port: 8081
 
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update # En desarrollo, permitimos que Hibernate actualice el esquema de la base de datos automáticamente
   datasource:
     url: jdbc:postgresql://${IAM_DB_HOST:localhost}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
     username: ${IAM_DB_USERNAME:admin}
@@ -28,6 +31,11 @@ spring:
         #billingEventsConsumer-in-0:
         #  destination: vankoo.billing.events
         #  group: iam-service-group
+
+# Usamos logs de Hibernate para mostrar las consultas SQL, ya que nos da más control sobre el formato y la información
+logging:
+  level:
+    org.hibernate.SQL: debug
 
 eureka:
   instance:

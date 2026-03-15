@@ -47,7 +47,7 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
     @Embedded
     private Password password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY) // Carga perezosa para evitar el problema de N+1 queries al cargar un usuario sin necesidad de sus roles
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

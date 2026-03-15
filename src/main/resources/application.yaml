@@ -6,12 +6,11 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
   jpa:
-    show-sql: true
+    show-sql: false # En vez de mostrar las consultas SQL, preferimos usar el log de Hibernate para tener más control sobre el formato y la información que se muestra
     hibernate:
-      ddl-auto: update
       naming:
         physical-strategy: com.liquilabs.vankoo.iam.infrastructure.persistence.jpa.configuration.strategy.SnakeCaseWithPluralizedTablePhysicalNamingStrategy
-    open-in-view: true
+    open-in-view: false # Desactiva el Open Session in View para evitar problemas de Lazy Loading en la capa de presentación
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
