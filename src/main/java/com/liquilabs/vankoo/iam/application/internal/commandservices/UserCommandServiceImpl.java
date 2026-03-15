@@ -5,6 +5,7 @@ import com.liquilabs.vankoo.iam.application.internal.outboundservices.tokens.Tok
 import com.liquilabs.vankoo.iam.domain.model.aggregates.User;
 import com.liquilabs.vankoo.iam.domain.model.commands.SignInCommand;
 import com.liquilabs.vankoo.iam.domain.model.commands.SignUpCommand;
+import com.liquilabs.vankoo.iam.domain.model.entities.Role;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.Password;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleName;
 import com.liquilabs.vankoo.iam.domain.services.UserCommandService;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -42,11 +44,12 @@ public class UserCommandServiceImpl implements UserCommandService {
     public Optional<User> handle(SignUpCommand command) {
         if (userRepository.existsByEmail(command.email()))
             throw new IllegalArgumentException("Email already in use");
-        var roles = (command.roles() == null || command.roles().isEmpty())
-                ? List.of(roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new RuntimeException("Default role not found")))
-                : command.roles().stream()
-                .map(role -> roleRepository.findByName(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found")))
-                .toList();
+        var roleNames = (command.roles() == null || command.roles().isEmpty())
+                ? List.of(RoleName.ROLE_USER)
+                : command.roles().stream().map(Role::getName).toList();
+        var roles = roleRepository.findAllByNameIn(roleNames);
+        if (roles.size() != roleNames.size())
+            throw new RuntimeException("One or more roles not found in database");
         var user = new User(command.email(), new Password(hashingService.encode(command.password().password())), roles);
         user.registerUserCreatedEvent();
         userRepository.save(user);
@@ -56,14 +59,12 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Override
     @Transactional
     public Optional<ImmutablePair<User, String>> handle(SignInCommand command) {
-        var user = userRepository.findByEmail(command.email());
-        if (user.isEmpty())
-            throw new IllegalArgumentException("User not found");
-        if (!hashingService.matches(command.password().password(), user.get().getPassword().password()))
+        var user = userRepository.findByEmailWithRoles(command.email())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (!hashingService.matches(command.password().password(), user.getPassword().password()))
             throw new IllegalArgumentException("Invalid password");
-        if (user.get().getId() == null) throw new IllegalStateException("User ID is null after save");
-        var roles = user.get().getRoles().stream().map(role -> role.getName().name()).toList();
-        var token = tokenService.generateToken(user.get().getId().id().toString(), user.get().getEmail().email(), roles);
-        return Optional.of(ImmutablePair.of(user.get(), token));
+        var roles = user.getRoles().stream().map(role -> role.getName().name()).toList();
+        var token = tokenService.generateToken(Objects.requireNonNull(user.getId()).id().toString(), user.getEmail().email(), roles);
+        return Optional.of(ImmutablePair.of(user, token));
     }
 }
