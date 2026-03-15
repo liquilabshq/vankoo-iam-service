@@ -1,0 +1,8 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate # En producción, solo queremos validar el esquema, no modificarlo
+
+logging:
+  level:
+    org.hibernate.SQL: error # En producción, solo queremos ver errores relacionados con las consultas SQL
