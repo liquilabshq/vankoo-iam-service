@@ -1,6 +1,6 @@
 package com.liquilabs.vankoo.iam.domain.model.entities;
 
-import com.liquilabs.vankoo.iam.domain.model.exceptions.RoleNotAllowedException;
+import com.liquilabs.vankoo.iam.domain.exceptions.RoleNotAllowedException;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleId;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleName;
 import jakarta.persistence.*;
