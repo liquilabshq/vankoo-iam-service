@@ -9,6 +9,17 @@ spring:
     url: jdbc:postgresql://${IAM_DB_HOST:localhost}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
     username: ${IAM_DB_USERNAME:admin}
     password: ${IAM_DB_PASSWORD:password}
+  mail:
+    # Mailpit: acepta lo que le manden y lo enseña en http://localhost:8025 en vez de
+    # entregarlo. Mismo SMTP que en producción, solo que sin credenciales ni TLS.
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
   cloud:
     #function:
     #  definition: userCreatedConsumer # Definimos el bean que actuará como consumidor de mensajes
@@ -56,3 +67,8 @@ management:
       exposure:
         # En desarrollo, exponemos solo los endpoints de salud e info por temas de seguridad, pero también para no saturar el log
         include: "health,info" # Importante para que Eureka vea el estado del IAM
+
+mail:
+  password-reset:
+    web-url: ${PASSWORD_RESET_WEB_URL:http://localhost:5173/iam/reset}
+    mobile-url: ${PASSWORD_RESET_MOBILE_URL:vankoo://reset-password}

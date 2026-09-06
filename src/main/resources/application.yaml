@@ -35,6 +35,15 @@ authorization:
     cleanup:
       cron: ${PASSWORD_RESET_CLEANUP_CRON:0 0 * * * *} # Cada hora en punto
 
+mail:
+  from: ${MAIL_FROM:Vankoo <no-reply@vankoo.dev>}
+  password-reset:
+    # A dónde apunta el enlace del correo. Son configuración y no constantes porque
+    # cambian por entorno, y el segundo desaparecerá el día que la web tenga un
+    # dominio propio con App Links.
+    web-url: ${PASSWORD_RESET_WEB_URL}
+    mobile-url: ${PASSWORD_RESET_MOBILE_URL}
+
 scalar:
   enabled: true
   theme: kepler
