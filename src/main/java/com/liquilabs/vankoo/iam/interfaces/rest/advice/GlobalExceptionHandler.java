@@ -1,9 +1,9 @@
 package com.liquilabs.vankoo.iam.interfaces.rest.advice;
 
-import com.liquilabs.vankoo.iam.domain.model.exceptions.EmailAlreadyInUseException;
-import com.liquilabs.vankoo.iam.domain.model.exceptions.InvalidCredentialsException;
-import com.liquilabs.vankoo.iam.domain.model.exceptions.RoleNotAllowedException;
-import com.liquilabs.vankoo.iam.domain.model.exceptions.UserNotFoundException;
+import com.liquilabs.vankoo.iam.domain.exceptions.EmailAlreadyInUseException;
+import com.liquilabs.vankoo.iam.domain.exceptions.InvalidCredentialsException;
+import com.liquilabs.vankoo.iam.domain.exceptions.RoleNotAllowedException;
+import com.liquilabs.vankoo.iam.domain.exceptions.UserNotFoundException;
 import com.liquilabs.vankoo.iam.interfaces.rest.problems.ApiProblem;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jspecify.annotations.Nullable;

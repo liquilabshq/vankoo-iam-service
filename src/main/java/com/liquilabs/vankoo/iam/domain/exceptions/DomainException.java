@@ -1,4 +1,4 @@
-package com.liquilabs.vankoo.iam.domain.model.exceptions;
+package com.liquilabs.vankoo.iam.domain.exceptions;
 
 /**
  * Base for the failures the domain itself recognises as failures.

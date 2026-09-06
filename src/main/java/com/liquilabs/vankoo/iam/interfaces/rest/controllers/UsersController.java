@@ -1,6 +1,6 @@
 package com.liquilabs.vankoo.iam.interfaces.rest.controllers;
 
-import com.liquilabs.vankoo.iam.domain.model.exceptions.UserNotFoundException;
+import com.liquilabs.vankoo.iam.domain.exceptions.UserNotFoundException;
 import com.liquilabs.vankoo.iam.domain.model.queries.GetUserByEmailQuery;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.Email;
 import com.liquilabs.vankoo.iam.domain.services.UserQueryService;

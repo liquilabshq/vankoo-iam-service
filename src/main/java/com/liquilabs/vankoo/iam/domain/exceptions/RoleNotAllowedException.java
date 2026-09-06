@@ -1,4 +1,4 @@
-package com.liquilabs.vankoo.iam.domain.model.exceptions;
+package com.liquilabs.vankoo.iam.domain.exceptions;
 
 /**
  * Raised when a sign-up request asks for a role nobody may grant themselves — either

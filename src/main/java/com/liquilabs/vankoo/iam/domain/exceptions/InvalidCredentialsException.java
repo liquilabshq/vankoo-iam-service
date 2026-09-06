@@ -1,4 +1,4 @@
-package com.liquilabs.vankoo.iam.domain.model.exceptions;
+package com.liquilabs.vankoo.iam.domain.exceptions;
 
 /**
  * Raised when sign-in fails, whatever the reason.

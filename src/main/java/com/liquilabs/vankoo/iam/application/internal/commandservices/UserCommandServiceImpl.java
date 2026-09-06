@@ -2,12 +2,12 @@ package com.liquilabs.vankoo.iam.application.internal.commandservices;
 
 import com.liquilabs.vankoo.iam.application.internal.outboundservices.hashing.HashingService;
 import com.liquilabs.vankoo.iam.application.internal.outboundservices.tokens.TokenService;
+import com.liquilabs.vankoo.iam.domain.exceptions.EmailAlreadyInUseException;
+import com.liquilabs.vankoo.iam.domain.exceptions.InvalidCredentialsException;
 import com.liquilabs.vankoo.iam.domain.model.aggregates.User;
 import com.liquilabs.vankoo.iam.domain.model.commands.SignInCommand;
 import com.liquilabs.vankoo.iam.domain.model.commands.SignUpCommand;
 import com.liquilabs.vankoo.iam.domain.model.entities.Role;
-import com.liquilabs.vankoo.iam.domain.model.exceptions.EmailAlreadyInUseException;
-import com.liquilabs.vankoo.iam.domain.model.exceptions.InvalidCredentialsException;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.Password;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleName;
 import com.liquilabs.vankoo.iam.domain.services.UserCommandService;
