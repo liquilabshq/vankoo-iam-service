@@ -28,6 +28,14 @@ public enum ApiProblem {
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "invalid-credentials", "Invalid credentials",
             "The email address or the password is incorrect."),
 
+    // One entry for all three ways a reset link fails: unknown, expired, already used.
+    // Splitting them would rebuild on the wire the distinction the domain refuses to
+    // make, and no client would render them differently — all three mean "ask for
+    // another link".
+    INVALID_PASSWORD_RESET_TOKEN(HttpStatus.BAD_REQUEST, "invalid-password-reset-token",
+            "Invalid password reset token",
+            "The password reset link is invalid, has expired or has already been used."),
+
     ROLE_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "role-not-allowed", "Role not allowed",
             "The requested role cannot be assigned while signing up."),
 

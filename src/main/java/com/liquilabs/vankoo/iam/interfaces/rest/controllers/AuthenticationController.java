@@ -2,10 +2,14 @@ package com.liquilabs.vankoo.iam.interfaces.rest.controllers;
 
 import com.liquilabs.vankoo.iam.domain.services.UserCommandService;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.AuthenticatedUserResource;
+import com.liquilabs.vankoo.iam.interfaces.rest.resources.ForgotPasswordResource;
+import com.liquilabs.vankoo.iam.interfaces.rest.resources.ResetPasswordResource;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.SignInResource;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.SignUpResource;
 import com.liquilabs.vankoo.iam.interfaces.rest.resources.UserResource;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.AuthenticatedUserResourceFromEntityAssembler;
+import com.liquilabs.vankoo.iam.interfaces.rest.transform.RequestPasswordResetCommandFromResourceAssembler;
+import com.liquilabs.vankoo.iam.interfaces.rest.transform.ResetPasswordCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.SignInCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.SignUpCommandFromResourceAssembler;
 import com.liquilabs.vankoo.iam.interfaces.rest.transform.UserResourceFromEntityAssembler;
@@ -74,5 +78,41 @@ public class AuthenticationController {
         var authenticatedUserResource = AuthenticatedUserResourceFromEntityAssembler
                 .toResourceFromEntity(authenticatedUser.getLeft(), authenticatedUser.getRight());
         return ResponseEntity.ok(authenticatedUserResource);
+    }
+
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Forgot password",
+            description = "Request a password reset link. Answers 202 with an empty body whether or not the "
+                    + "address has an account, so that the endpoint cannot be used to discover accounts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202",
+                    description = "Request accepted. If the address has an account a reset link is on its way, "
+                            + "and the answer is identical when it does not"),
+            @ApiResponse(responseCode = "400", description = "Invalid body",
+                    content = @Content(mediaType = PROBLEM_JSON, schema = @Schema(implementation = ProblemDetail.class))),
+    })
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordResource resource) {
+        var command = RequestPasswordResetCommandFromResourceAssembler.toCommandFromResource(resource);
+        // The service returns nothing, so there is nothing here to branch on. That is
+        // the point: 202 is the only answer this method can give.
+        userCommandService.handle(command);
+        // Accepted rather than 200 or 204 because it is true: the mail leaves after the
+        // transaction commits, on another thread, so the outcome is not known yet.
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "Reset password", description = "Set a new password using a token received by email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Password changed successfully"),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid body, or a token that is unknown, expired or already used. "
+                            + "The three token failures are reported identically",
+                    content = @Content(mediaType = PROBLEM_JSON, schema = @Schema(implementation = ProblemDetail.class))),
+    })
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordResource resource) {
+        var command = ResetPasswordCommandFromResourceAssembler.toCommandFromResource(resource);
+        userCommandService.handle(command);
+        return ResponseEntity.noContent().build();
     }
 }
