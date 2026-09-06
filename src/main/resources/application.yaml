@@ -27,6 +27,13 @@ authorization:
     secret: ${JWT_SECRET}
     expiration:
       days: ${JWT_EXPIRATION_DAYS}
+  password-reset:
+    expiration:
+      # Corto a propósito: un enlace de recuperación se reenvía, se queda en la bandeja
+      # y sobrevive al momento en que hacía falta.
+      minutes: ${PASSWORD_RESET_EXPIRATION_MINUTES:30}
+    cleanup:
+      cron: ${PASSWORD_RESET_CLEANUP_CRON:0 0 * * * *} # Cada hora en punto
 
 scalar:
   enabled: true
