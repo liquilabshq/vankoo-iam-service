@@ -1,5 +1,6 @@
 package com.liquilabs.vankoo.iam.domain.model.entities;
 
+import com.liquilabs.vankoo.iam.domain.model.exceptions.RoleNotAllowedException;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleId;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.RoleName;
 import jakarta.persistence.*;
@@ -43,6 +44,19 @@ public class Role implements Persistable<RoleId> {
 
     public static Role toRoleFromName(String name) {
         return new Role(RoleName.valueOf(name));
+    }
+
+    /**
+     * Builds a role from a name a client sent while signing up.
+     *
+     * Unlike {@link #toRoleFromName(String)}, which trusts its caller and is used for
+     * seeding, this one refuses anything outside the self-assignable set. It also
+     * avoids the bare {@code valueOf}, whose IllegalArgumentException carries a JVM
+     * message that would end up describing our enum to a stranger.
+     */
+    public static Role toSelfAssignableRoleFromName(String name) {
+        return new Role(RoleName.selfAssignableFrom(name)
+                .orElseThrow(() -> new RoleNotAllowedException(name)));
     }
 
     public static List<Role> validateRoleSet(List<Role> roles) {

@@ -32,18 +32,19 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
+            // The token itself is never logged: it is a bearer credential, and anyone
+            // who can read the log could then sign in as that user.
             String token = tokenService.getBearerTokenFrom(request);
-            LOGGER.info("Token: {}", token);
             if (token != null && tokenService.validateToken(token)) {
                 String username = tokenService.getUsernameFromToken(token);
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationTokenBuilder.build(userDetails, request));
             } else {
-                LOGGER.info("Token is not valid");
+                LOGGER.debug("No usable bearer token on request to {}", request.getRequestURI());
             }
 
         } catch (Exception e) {
-            LOGGER.error("Cannot set user authentication: {}", e.getMessage());
+            LOGGER.warn("Cannot set user authentication for {}: {}", request.getRequestURI(), e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
