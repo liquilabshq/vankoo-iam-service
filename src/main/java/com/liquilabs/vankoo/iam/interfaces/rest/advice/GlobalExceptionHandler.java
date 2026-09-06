@@ -2,6 +2,7 @@ package com.liquilabs.vankoo.iam.interfaces.rest.advice;
 
 import com.liquilabs.vankoo.iam.domain.exceptions.EmailAlreadyInUseException;
 import com.liquilabs.vankoo.iam.domain.exceptions.InvalidCredentialsException;
+import com.liquilabs.vankoo.iam.domain.exceptions.InvalidPasswordResetTokenException;
 import com.liquilabs.vankoo.iam.domain.exceptions.RoleNotAllowedException;
 import com.liquilabs.vankoo.iam.domain.exceptions.UserNotFoundException;
 import com.liquilabs.vankoo.iam.interfaces.rest.problems.ApiProblem;
@@ -59,6 +60,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ProblemDetail> handleInvalidCredentials(InvalidCredentialsException exception,
                                                                   HttpServletRequest request) {
         return respond(ApiProblem.INVALID_CREDENTIALS, request);
+    }
+
+    @ExceptionHandler(InvalidPasswordResetTokenException.class)
+    public ResponseEntity<ProblemDetail> handleInvalidPasswordResetToken(InvalidPasswordResetTokenException exception,
+                                                                         HttpServletRequest request) {
+        // The token stays out of the log line: it is a bearer secret for as long as it
+        // is alive, and a rejected one may simply have been mistyped.
+        LOGGER.warn("Rejected a password reset at {}", request.getRequestURI());
+        return respond(ApiProblem.INVALID_PASSWORD_RESET_TOKEN, request);
     }
 
     @ExceptionHandler(RoleNotAllowedException.class)

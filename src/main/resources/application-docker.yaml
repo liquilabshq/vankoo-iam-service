@@ -10,6 +10,16 @@ spring:
     url: jdbc:postgresql://${IAM_DB_HOST:iam-db-postgres}:${IAM_DB_PORT:5432}/${IAM_DB_NAME:vankoo_iam_db_dev}
     username: ${IAM_DB_USERNAME:admin}
     password: ${IAM_DB_PASSWORD:password}
+  mail:
+    # Dentro de la red de Docker, Mailpit responde por su nombre de servicio.
+    host: ${MAIL_HOST:mailpit}
+    port: ${MAIL_PORT:1025}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
   cloud:
     #function:
     #  definition: userCreatedConsumer # Definimos el bean que actuará como consumidor de mensajes
@@ -60,3 +70,10 @@ management:
         # En Docker, es útil exponer todos los endpoints de gestión para monitoreo y debugging
         # Ya que la red es interna, no hay riesgo de exponer información sensible al exterior
         include: "*"
+
+mail:
+  password-reset:
+    # localhost y no el nombre del servicio: este enlace lo abre un navegador en la
+    # máquina de quien desarrolla, no un contenedor.
+    web-url: ${PASSWORD_RESET_WEB_URL:http://localhost:5173/iam/reset}
+    mobile-url: ${PASSWORD_RESET_MOBILE_URL:vankoo://reset-password}

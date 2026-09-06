@@ -1,6 +1,7 @@
 package com.liquilabs.vankoo.iam.domain.model.aggregates;
 
 import com.liquilabs.vankoo.iam.domain.model.entities.Role;
+import com.liquilabs.vankoo.iam.domain.model.events.PasswordChangedEvent;
 import com.liquilabs.vankoo.iam.domain.model.events.UserCreatedEvent;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.Email;
 import com.liquilabs.vankoo.iam.domain.model.valueobjects.Password;
@@ -84,6 +85,22 @@ public class User extends AbstractAggregateRoot<User> implements Persistable<Use
         var validatedRoleSet = Role.validateRoleSet(roles);
         this.roles.addAll(validatedRoleSet);
         return this;
+    }
+
+    /**
+     * Cambia la contraseña.
+     * <p>
+     * Recibe el valor ya cifrado, igual que el constructor: el agregado nunca ve la
+     * contraseña en claro, y quien la cifra es el mismo servicio de aplicación que ya
+     * lo hace al registrarse.
+     */
+    public void changePassword(Password password) {
+        this.password = password;
+    }
+
+    public void registerPasswordChangedEvent() {
+        this.registerEvent(
+                new PasswordChangedEvent(this.id.id().toString(), this.getEmail().email()));
     }
 
     public void registerUserCreatedEvent() {
