@@ -27,5 +27,8 @@ COPY --from=build /app/target/iam-*.jar app.jar
 # Exponemos el puerto que configuramos en el YAML
 EXPOSE 8081
 
-# Ejecutamos con el perfil de docker activo
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
+# Perfil por defecto: docker (Compose local). Se elige por variable de entorno y no
+# con -D porque un -D en el ENTRYPOINT ganaría siempre a SPRING_PROFILES_ACTIVE y
+# haría imposible arrancar con otro perfil (por ejemplo, azure) sin reconstruir la imagen.
+ENV SPRING_PROFILES_ACTIVE=docker
+ENTRYPOINT ["java", "-jar", "app.jar"]
