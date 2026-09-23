@@ -43,6 +43,17 @@ Ideal para pruebas de integración y despliegue final.
     ```
     (Si es la primera vez que levantas `vankoo-infra`, simplemente corre `docker compose up -d --build` para levantar todo).
 
+### 3. Azure Container Apps
+Despliegue en la nube (Sprint 2). Los scripts y el paso a paso viven en `vankoo-infra/azure/`.
+* **Perfil activo:** `azure` (la imagen arranca con `docker` por defecto; la Container App lo sobrescribe con `SPRING_PROFILES_ACTIVE=azure`).
+* **Eureka:** apagado (`eureka.client.enabled=false`). El gateway resuelve por el DNS interno del entorno.
+* **Eventos:** apagados (`vankoo.events.enabled=false`) mientras no haya broker en Azure. Entra `LoggingEventService`, que registra el evento en el log y lo descarta. **Parche temporal**: retirar cuando exista Event Hubs.
+* **Esquema:** `ddl-auto: update` hasta que haya migraciones versionadas. **Parche temporal.**
+* **Correo:** variables `MAIL_*` definidas pero vacías hasta elegir proveedor SMTP; recuperar contraseña responde igual pero el correo no sale. El indicador de salud de correo está apagado por el mismo motivo.
+* **Actuator:** solo `health` e `info` expuestos; el resto no debe salir a internet.
+
+Variables propias de este perfil, además de las de la tabla de abajo: `IAM_DB_NAME`, `IAM_DB_SSLMODE` (`require` por defecto), `IAM_PUBLIC_HOST`, `IAM_GATEWAY_HOST`, `PASSWORD_RESET_WEB_URL`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`.
+
 ---
 
 ## Arquitectura de Red (Eureka)
