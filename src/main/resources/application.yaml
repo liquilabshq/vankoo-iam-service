@@ -36,6 +36,11 @@ authorization:
       cron: ${PASSWORD_RESET_CLEANUP_CRON:0 0 * * * *} # Cada hora en punto
 
 mail:
+  # smtp (por defecto: Mailpit en local) o acs (Azure Communication Services por su
+  # API REST, con la cadena de conexión del recurso).
+  provider: ${MAIL_PROVIDER:smtp}
+  acs:
+    connection-string: ${ACS_CONNECTION_STRING:}
   from: ${MAIL_FROM:Vankoo <no-reply@vankoo.dev>}
   password-reset:
     # A dónde apunta el enlace del correo. Son configuración y no constantes porque
